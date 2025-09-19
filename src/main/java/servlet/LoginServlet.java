@@ -35,7 +35,7 @@ public class LoginServlet extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String user_id = request.getParameter(LEGACY_DO_HEAD)
+        String user_id = request.getParameter(LEGACY_DO_HEAD);
     }
 
 }
