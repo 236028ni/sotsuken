@@ -4,9 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>ログイン画面</title>
 </head>
-<body>a
-sss
+<body>
+    <form action = "LoginServlet" method = "post">
+        <h1>ログイン画面</h1>
+        学籍番号
+        名前
+        パスワード
+    </form>
 </body>
 </html>
