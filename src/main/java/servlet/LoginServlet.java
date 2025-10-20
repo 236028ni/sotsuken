@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
         String user_id = request.getParameter("###");//入力されたIDを取得
         String password = request.getParameter("###");//入力されたPWを取得
         UserDAO udao = new UserDAO();
-        String role = udao.getRoleById();
+        String role = udao.getRoleById();;
         boolean isLogin = udao.certification(user_id,password);
         
         
