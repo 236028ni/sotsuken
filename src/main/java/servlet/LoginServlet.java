@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import dao.UserDAO;
+
 /**
  * Servlet implementation class LoginServlet
  */
@@ -35,7 +37,13 @@ public class LoginServlet extends HttpServlet {
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String user_id = request.getParameter(LEGACY_DO_HEAD);
+        String user_id = request.getParameter("###");//入力されたIDを取得
+        String password = request.getParameter("###");//入力されたPWを取得
+        UserDAO udao = new UserDAO();
+        String role = udao.getRoleById();
+        boolean isLogin = udao.certification(user_id,password);
+        
+        
     }
 
 }
