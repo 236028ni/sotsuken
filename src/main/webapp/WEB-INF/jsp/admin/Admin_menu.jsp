@@ -74,7 +74,7 @@
             <form action = "Account_management_Servlet" method = "post">
             	アカウント管理
             </form>
-        </div>
+        </div> 
 
         <div class="menu-item">
             <form action = "Data_management_Servlet" method = "post">
