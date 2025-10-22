@@ -10,16 +10,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class Account_management_Servlet
+ * Servlet implementation class Redirect_Admin_menu_Servlet
  */
-@WebServlet("/Redirect_Account_management_Servlet")
-public class Redirect_Account_management_Servlet extends HttpServlet {
+@WebServlet("/Redirect_Admin_menu_Servlet")
+public class Redirect_Admin_menu_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Redirect_Account_management_Servlet() {
+    public Redirect_Admin_menu_Servlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,8 +36,8 @@ public class Redirect_Account_management_Servlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Account_management.jsp");
-		dispatcher.forward(request, response);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Admin_menu.jsp");
+    	dispatcher.forward(request, response);
 	}
 
 }

@@ -36,8 +36,30 @@ public class LoginServlet extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getSession().setAttribute("loginErrorMsg", "不正なアクセスです<br>再ログインしてください");
-        response.sendRedirect("Login.jsp");
+        HttpSession session = request.getSession(false);
+    	//セッションがあり、ログイン済みかチェックする
+    	//doPostのロジックに合わせて、いずれかのロール情報であるかで判断
+    	if(session != null &&(session.getAttribute("student") != null || 
+                session.getAttribute("teacher") != null || 
+                session.getAttribute("admin") != null)) {
+    		//ログイン済みの場合：ロール別に適切な画面にフォワード
+    		if (session.getAttribute("student") != null) {
+                // 学生メニューへフォワード（doPostのstudent分岐に合わせてパスを追加してください）
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/student/Student_menu.jsp");
+                dispatcher.forward(request, response);
+            } else if (session.getAttribute("teacher") != null) {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/teacher/Teacher_menu.jsp");
+                dispatcher.forward(request, response);
+            } else if (session.getAttribute("admin") != null) {
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Admin_menu.jsp");
+                dispatcher.forward(request, response);
+            }
+    	}else {
+            // 未ログインの場合：ログイン画面へフォワード（またはリダイレクト）
+            // doGetで来た場合はエラーではなく、単純にログイン画面を表示すれば良い
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
+            dispatcher.forward(request, response);
+        }
     }
 
     /**
@@ -62,6 +84,11 @@ public class LoginServlet extends HttpServlet {
         	RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
         	dispatcher.forward(request, response);
         }else {
+        	// ★★★ 修正点1: フィルター用のセッション情報を格納 ★★★
+            // AuthFilterが "loginUser" と "user_role" を見ているため
+            session.setAttribute("loginUser", user); // または user.getUser_id() など
+            session.setAttribute("user_role", user.getRole());
+        	
         	
         	String role = user.getRole();
         	if(role.equals("student")) {

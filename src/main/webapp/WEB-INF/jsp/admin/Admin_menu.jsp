@@ -76,19 +76,19 @@
         <h1>管理者メニュー</h1>
 
         <div class="menu-item">
-            <form action = "Account_management_Servlet" method = "post">
+            <form action = "Redirect_Account_management_Servlet" method = "post">
             	<button type = "submit" class = "link-button">アカウント管理</button>
             </form>
         </div> 
 
         <div class="menu-item">
-            <form action = "Data_management_Servlet" method = "post">
+            <form action = "Redirect_Data_management_Servlet" method = "post">
             	<button type = "submit" class = "link-button">データ集計（保留）</button>
             </form>
         </div>
 
         <div class="menu-item">
-            <form action = "room_log_management_Servlet" method = "post">
+            <form action = "Redirect_Roomlog_management_Servlet" method = "post">
             	<button type = "submit" class = "link-button">入退室ログ管理</button>
             </form>
         </div>
