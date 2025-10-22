@@ -34,7 +34,7 @@
             margin-bottom: 20px;
         }
 
-        .menu-item a {
+        .link-button {
             display: block;
             text-align: center;
             padding: 15px 0;
@@ -44,12 +44,17 @@
             text-decoration: none; /* 下線を非表示 */
             border: 1px solid transparent; /* ホバー効果のために透明な枠線を用意 */
             transition: background-color 0.3s;
+            
+            width:100%;
+            max-width:500px;
+            background-color:transparent;
         }
 
-        .menu-item a:hover {
+        .link-button:hover{
             background-color: #f9f9f9;
             border-color: #ddd;
         }
+        
 
         .logout-link {
             position: absolute;
@@ -72,19 +77,19 @@
 
         <div class="menu-item">
             <form action = "Account_management_Servlet" method = "post">
-            	アカウント管理
+            	<button type = "submit" class = "link-button">アカウント管理</button>
             </form>
         </div> 
 
         <div class="menu-item">
             <form action = "Data_management_Servlet" method = "post">
-            	データ集計（保留）
+            	<button type = "submit" class = "link-button">データ集計（保留）</button>
             </form>
         </div>
 
         <div class="menu-item">
             <form action = "room_log_management_Servlet" method = "post">
-            	入退室ログ管理
+            	<button type = "submit" class = "link-button">入退室ログ管理</button>
             </form>
         </div>
         
