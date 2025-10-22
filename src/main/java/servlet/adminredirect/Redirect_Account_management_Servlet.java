@@ -19,7 +19,7 @@ public class Redirect_Account_management_Servlet extends HttpServlet {
      * @see HttpServlet#HttpServlet()
      */
     public Redirect_Account_management_Servlet() {
-        super();
+        super(); 
         // TODO Auto-generated constructor stub
     }
 
