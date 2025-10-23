@@ -93,7 +93,9 @@
             </form>
         </div>
         
-        <a href="Logout.html" class="logout-link">ログアウト</a>
+        <form action = "LogoutServlet" method = "post">
+        	<button type = "submit" class = "logout-link">ログアウト</button>
+        </form>
     </div>
 </body>
 </html>

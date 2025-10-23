@@ -13,16 +13,16 @@ import jakarta.servlet.http.HttpSession;
 import model.UserBean;
 
 /**
- * Servlet implementation class Redirect_Admin_menu_Servlet
+ * Servlet implementation class Redirect_Account_list_Servlet
  */
-@WebServlet("/Redirect_Admin_menu_Servlet")
-public class Redirect_Admin_menu_Servlet extends HttpServlet {
+@WebServlet("/Redirect_Account_list_Servlet")
+public class Redirect_Account_list_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Redirect_Admin_menu_Servlet() {
+    public Redirect_Account_list_Servlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -43,15 +43,15 @@ public class Redirect_Admin_menu_Servlet extends HttpServlet {
 	    request.setAttribute("user", user); 
 	    
 	    // 3. JSPへフォワード
-	    request.getRequestDispatcher("/WEB-INF/jsp/admin/Admin_menu.jsp").forward(request, response);
+	    request.getRequestDispatcher("/WEB-INF/jsp/admin/Account_list.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Admin_menu.jsp");
-    	dispatcher.forward(request, response);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Account_list.jsp");
+		dispatcher.forward(request, response);
 	}
 
 }

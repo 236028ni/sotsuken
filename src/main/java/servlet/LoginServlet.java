@@ -76,7 +76,9 @@ public class LoginServlet extends HttpServlet {
         
         UserBean user = udao.certification(user_id,password);
         
+        //テスト用コード
         System.out.println(user);
+        
         session.removeAttribute("login_error_msg");
         if(user==null) {
         	//すべての情報がnull（＝ID,PWの組が存在しない）場合、ログイン画面に戻る
