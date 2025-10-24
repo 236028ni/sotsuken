@@ -95,8 +95,10 @@ public class LoginServlet extends HttpServlet {
         	String role = user.getRole();
         	if(role.equals("student")) {
             	//studentの情報をセッションスコープに格納して次の画面へ
-            	StudentBean student = sdao.findall(user);
+            	StudentBean student = sdao.search_by_id(user);
             	session.setAttribute("student", student);
+            	RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/student/Student_menu.jsp");
+            	dispatcher.forward(request, response);
             }else if(role.equals("teacher")) {
             	//teacherの情報をセッションスコープに格納して次の画面へ
             	TeacherBean teacher = tdao.findall(user);

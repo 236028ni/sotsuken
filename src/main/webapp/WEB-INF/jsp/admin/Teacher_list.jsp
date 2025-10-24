@@ -142,25 +142,12 @@
                 </tbody>
         </table>
 
-        <a href="account_management.html" class="back-button">戻る</a>
+        <div class="menu-item">
+            <form action="Redirect_Account_management_Servlet" method = "post">
+            	<button type = "submit" class = "back-button">戻る</button>
+           	</form>
+        </div>
     </div>
     
-    <script>
-        // 【注意】これはHTML/CSSのみのサンプルです。
-        // 実際の「検索機能」や「削除機能」は、JavaScriptとサーバー側の処理（PHP, Python, Rubyなど）が必要です。
-
-        function deleteAccount(id) {
-            if (confirm(id + 'のアカウントを削除してもよろしいですか？')) {
-                // 削除処理のAPIエンドポイントにリクエストを送信する処理をここに記述
-                console.log(id + 'を削除しました (実際の処理は未実装)');
-            }
-        }
-        
-        // 検索ボタンのクリックイベントに、検索APIへのリクエスト処理を記述します。
-        // document.getElementById('search_button').addEventListener('click', function() {
-        //     const query = document.getElementById('search_input').value;
-        //     // 検索API (例: /api/accounts?query=xxx) を呼び出し、結果を一覧表に反映する処理
-        // });
-    </script>
 </body>
 </html>
