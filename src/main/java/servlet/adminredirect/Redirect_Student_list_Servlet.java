@@ -43,14 +43,14 @@ public class Redirect_Student_list_Servlet extends HttpServlet {
 	    request.setAttribute("user", user); 
 	    
 	    // 3. JSPへフォワード
-	    request.getRequestDispatcher("/WEB-INF/jsp/admin/Student_list.jsp").forward(request, response);
+	    request.getRequestDispatcher("/WEB-INF/jsp/admin/Student_list2.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Student_list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Student_list2.jsp");
 		dispatcher.forward(request, response);
 	}
 

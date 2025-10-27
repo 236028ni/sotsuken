@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.StudentBean;
 import model.UserBean;
@@ -59,9 +61,10 @@ public class StudentDAO extends DAOparam{
 			return null;
 		}
 	}
-	public StudentBean findall() {
+	public List<StudentBean> findall() {
+		List<StudentBean> student_list = new ArrayList<>();
 		try(Connection conn = DriverManager.getConnection(JDBC_URL,DB_USER,DB_PASS)){
-			String sql = "select u.user_id,u.password,u.role,u.created_at,u.updated_at,u.updated_by "
+			String sql = "select u.user_id,u.password,u.role,u.created_at,u.updated_at,u.updated_by, "
 					+ "s.student_name,s.class_id,s.email,s.phone,s.photo_path "
 					+ "from users  u join students s on u.user_id = s.student_id ";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
@@ -69,7 +72,7 @@ public class StudentDAO extends DAOparam{
 			ResultSet rs = pStmt.executeQuery();
 			
 			
-			if (rs.next()) {
+			while (rs.next()) {
 			    // (A) 親の情報を、DBから取得した rs からセット
 			    String user_id = rs.getString("user_id");
 			    String password = rs.getString("password");
@@ -88,14 +91,11 @@ public class StudentDAO extends DAOparam{
 			    // (A)と(B) のすべての変数をコンストラクタに格納する
 			    StudentBean student = new StudentBean(user_id,password,role,created_at,updated_at,updated_by,
 			            student_name,class_id,email,phone,photo_path);
-			    
-			    //すべてが詰まった「完全な studentBean」を返す
-			    return student;
-			    
-			}else {
-			    return null;
+			    student_list.add(student);
 			}
+			return student_list;
 		}catch (SQLException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

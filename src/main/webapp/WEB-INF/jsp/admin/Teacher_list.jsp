@@ -1,11 +1,19 @@
+<%@ page import="java.util.*,dao.TeacherDAO,model.UserBean,model.TeacherBean" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+	TeacherDAO tdao = new TeacherDAO();
+	List<TeacherBean>teacher_list = tdao.findall();
+	session.setAttribute("teacher_list", teacher_list);
+%>
+<c:set var = "teacher_list" value = "${sessionScope.teacher_list }"/>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アカウント一覧</title>
+    <title>講師一覧</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -101,45 +109,40 @@
 </head>
 <body>
     <div class="list-container">
-        <h1>一覧</h1>
+        <h1>講師一覧</h1>
 
         <div class="search-area">
-            <input type="text" placeholder="教師IDまたは学籍番号" id="search_input">
-            <button id="search_button">検索</button>
-            </div>
+        	<form action = "search_by_id_Servlet" method = "post">
+	            <input type="text" placeholder="講師ID" id="search_input" name = "in_text">
+	            <button type = "submit" id="search_button">検索</button>
+            </form>
+         </div>
 
         <table class="data-table">
             <thead>
                 <tr>
                     <th>教師ID</th>
                     <th>教師名</th>
-                    <th>学籍番号</th>
-                    <th>学生名</th>
                     <th class="actions">操作</th>
                 </tr>
             </thead>
+            
             <tbody id="account_list_body">
+            	<c:forEach var = "teacher" items = "${not empty result_list?result_list:teacher_list }">
                 <tr>
-                    <td>T001</td>
-                    <td>山田 太郎</td>
-                    <td>-</td>
-                    <td>-</td>
+                    <td>${teacher.user_id }</td>
+                    <td>${teacher.teacher_name }</td>
                     <td class="actions">
-                        <a href="account_edit.html?id=T001"><button>変更</button></a>
-                        <button onclick="deleteAccount('T001')">削除</button>
-                    </td>
+		                    <form action = "" method = "post">
+		                    	<button type = "submit">変更</button>
+		                    </form>
+		                    <form>    
+		                        <button type = "submit">削除</button>
+	                        </form>
+	                    </td>
                 </tr>
-                <tr>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>S1001</td>
-                    <td>佐藤 花子</td>
-                    <td class="actions">
-                        <a href="account_edit.html?id=S1001"><button>変更</button></a>
-                        <button onclick="deleteAccount('S1001')">削除</button>
-                    </td>
-                </tr>
-                </tbody>
+                </c:forEach>
+            </tbody>
         </table>
 
         <div class="menu-item">

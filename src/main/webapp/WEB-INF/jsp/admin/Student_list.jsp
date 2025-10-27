@@ -1,10 +1,10 @@
-<%@page import="java.util.*,dao.ShiiresakiDAO,model.shiiresakiBean" %>
+<%@page import="java.util.*,dao.StudentDAO,model.UserBean,model.StudentBean" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 	StudentDAO sdao = new StudentDAO();
-	List<studentBean>student_list = sdao.findall();
+	List<StudentBean>student_list = sdao.findall();
 	session.setAttribute("student_list", student_list);
 %>
 <c:set var = "student_list" value = "${sessionScope.student_list }"/>
@@ -13,7 +13,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アカウント一覧</title>
+    <title>学生一覧</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -109,7 +109,7 @@
 </head>
 <body>
     <div class="list-container">
-        <h1>一覧</h1>
+        <h1>学生一覧</h1>
 
         <div class="search-area">
         	<form action = "search_by_id_Servlet" method = "post">
@@ -128,10 +128,10 @@
             </thead>
             
             <tbody id="account_list_body">
-            	<c:foreach var = "user" items = "${not empty resultL_list?result_list:student_list }">
+            	<c:forEach var = "student" items = "${not empty result_list?result_list:student_list }">
 	                <tr>
-	                    <td>${user. }</td>
-	                    <td>佐藤 花子</td>
+	                    <td>${student.user_id }</td>
+	                    <td>${student.student_name}</td>
 	                    <td class="actions">
 		                    <form action = "" method = "post">
 		                    	<button type = "submit">変更</button>
@@ -141,7 +141,7 @@
 	                        </form>
 	                    </td>
 	                </tr>
-                </c:foreach>
+                </c:forEach>
             </tbody>
         </table>
 

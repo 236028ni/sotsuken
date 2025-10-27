@@ -101,7 +101,7 @@ public class LoginServlet extends HttpServlet {
             	dispatcher.forward(request, response);
             }else if(role.equals("teacher")) {
             	//teacherの情報をセッションスコープに格納して次の画面へ
-            	TeacherBean teacher = tdao.findall(user);
+            	TeacherBean teacher = tdao.search_by_id(user);
             	session.setAttribute("teacher", teacher);
             	RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/teacher/Teacher_menu.jsp");
             	dispatcher.forward(request, response);
