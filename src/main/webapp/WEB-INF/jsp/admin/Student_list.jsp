@@ -128,10 +128,9 @@
             </thead>
             
             <tbody id="account_list_body">
-            	<c:set var = "List" value = "${not empty  }"
-            	<c:foreach var = "user" items = "${ List}">
+            	<c:foreach var = "user" items = "${not empty resultL_list?result_list:student_list }">
 	                <tr>
-	                    <td>S1001</td>
+	                    <td>${user. }</td>
 	                    <td>佐藤 花子</td>
 	                    <td class="actions">
 		                    <form action = "" method = "post">
