@@ -8,6 +8,10 @@
 	session.setAttribute("student_list", student_list);
 %>
 <c:set var = "student_list" value = "${sessionScope.student_list }"/>
+<c:set var = "result_list" value = "${sessionScope.result_list }"/>
+<c:set var = "in_student_id" value = "${sessionScope.in_student_id }"/>
+<c:set var = "error_msg" value = "${sessionScope.error_msg }"/>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -136,41 +140,59 @@
     <div class="list-container">
         <h1>学生一覧</h1>
 		<div class="table-wrapper">
+			<c:if test = "${in_student_id != null }">
+				<p>学籍番号に「"${in_student_id }"」を含む学生：${result_list.size() }件</p>
+			</c:if>
+			<c:if test = "${in_student_id!=null}">
+                <form action = "Redirect_Student_list_Servlet" method = "post" class="reset-form">
+                    <button type = "submit" class="reset-button">リセット</button> <%-- ★変更: ボタンのクラス変更 --%>
+                </form>
+            </c:if>
         	<div class="search-area">
-        		<form action = "search_by_id_Servlet" method = "post">
-	       	    	<input type="text" placeholder="学籍番号" id="search_input" name = "in_text">
+        		<form action = "Search_by_id_Servlet" method = "post" onsubmit = "return user_id_Check()">
+	       	    	<input type="text" placeholder="学籍番号" id="search_input" name = "in_student_id" >
 	        	    <button type = "submit" id="search_button">検索</button>
             	</form>
          	</div>
 
-        	<table class="data-table">
-          	  <thead>
-             	   <tr>
-                    	<th>学籍番号</th>
-                    	<th>学生名</th>
-                    	<th colspan = "2" class="actions">操作</th>
-                	</tr>
-            	</thead>
-            
-            	<tbody id="account_list_body">
-            		<c:forEach var = "student" items = "${not empty result_list?result_list:student_list }">
-	         	       <tr>
-	                	    <td>${student.user_id }</td>
-	                 	   <td>${student.student_name}</td>
-	                	    <td class="actions">
-		               	     <form action = "" method = "post">
-		               	     	<button type = "submit"class = "action-button btn-edit">変更</button>
-		               	     </form>
-		               	     </td>
-		               	     <td>
-		                 	   <form>    
-		                   	     <button type = "submit"class = "action-button btn-delete">削除</button>
-	                      	  </form>
-	                  	  </td>
+			<c:choose>
+				<c:when test = "${not empty error_msg }">
+					<p>${error_msg }</p>
+				</c:when>
+				<c:when test = "${empty student_list }">
+					<p>学生が登録されていません</p>
+				</c:when>
+				<c:otherwise>
+	        	<table class="data-table">
+	          	  <thead>
+	             	   <tr>
+	                    	<th>学籍番号</th>
+	                    	<th>学生名</th>
+	                    	<th colspan = "2" class="actions">操作</th>
 	                	</tr>
-               	 </c:forEach>
-           	 </tbody>
-        	</table>
+	            	</thead>
+	            
+	            	<tbody id="account_list_body">
+	            		<c:forEach var = "student" items = "${not empty result_list?result_list:student_list }">
+		         	       <tr>
+		                	    <td>${student.user_id }</td>
+		                 	   <td>${student.student_name}</td>
+		                	    <td class="actions">
+			               	     <form action = "" method = "post">
+			               	     	<button type = "submit"class = "action-button btn-edit">変更</button>
+			               	     </form>
+			               	     </td>
+			               	     <td>
+			                 	   <form>    
+			                   	     <button type = "submit"class = "action-button btn-delete">削除</button>
+		                      	  </form>
+		                  	  </td>
+		                	</tr>
+	               	 </c:forEach>
+	           	 </tbody>
+	        	</table>
+	        	</c:otherwise>
+			</c:choose>
 
         	<div class="menu-item">
           	  <form action="Redirect_Account_management_Servlet" method = "post">
@@ -180,4 +202,62 @@
    	 </div>
     </div>
 </body>
+<script>
+	function user_id_Check(){
+		let user_id = document.getElementById('search_input');
+		let in_user_id = user_id.value;
+		let new_user_id = in_user_id.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 65248));
+		if (!/^\d+$/.test(new_user_id)) {
+			alert("学籍番号は数字で入力してください。");
+			return false;
+		}
+		user_id.value = new_user_id;
+		return true;
+	}
+	// 1. 対象の要素を取得
+	const inputElement = document.getElementById('search_input');
+
+	// 2. IME入力中かどうかを判定するフラグ
+	let isComposing = false;
+
+	// 3. IME入力が開始された時のイベント
+	inputElement.addEventListener('compositionstart', () => {
+	    isComposing = true;
+	});
+
+	// 4. IME入力が終了した時のイベント
+	inputElement.addEventListener('compositionend', () => {
+	    isComposing = false;
+	    // IME終了時にフォーマットを実行
+	    formatStudent_id();
+	});
+
+	// 5. (oninput) 半角入力やペーストなど、IME以外の入力イベント
+	inputElement.addEventListener('input', () => {
+	    // IME入力中でなければ、フォーマットを実行
+	    if (!isComposing) {
+	        formatStudent_id();
+	    }
+	});
+
+	// 6. フォーマット処理を行う関数 (内容は少し最適化)
+	function formatStudent_id() {
+	    let currentValue = inputElement.value;
+
+	    // 1. 全角数字(０-９)を半角(0-9)に変換
+	    // (英字は最終的に削除するので、ここで変換する必要はない)
+	    let newValue = currentValue.replace(/[０-９]/g, function(s) {
+	        return String.fromCharCode(s.charCodeAt(0) - 65248);
+	    });
+
+	    // 2. 半角数字「以外」の文字をすべて削除
+	    newValue = newValue.replace(/[^0-9]/g, '');
+
+	    // 3. 変換・整形した値を入力ボックスに書き戻す
+	    //    (値が実際に変更された場合のみ書き戻す)
+	    if (inputElement.value !== newValue) {
+	        inputElement.value = newValue;
+	    }
+	}
+</script>
 </html>
