@@ -184,7 +184,7 @@
 			               	     </td>
 			               	     <td>
 			                 	   <form action = "Redirect_Account_delete_Servlet" method = "post">
-			                 	   	 <input type = "hidden" name = "teacher_id" value = "${teacher.user_id }"> 
+			                 	   	 <input type = "hidden" name = "del_teacher_id" value = "${teacher.user_id }"> 
 			                   	     <button type = "submit"class = "action-button btn-delete">削除</button>
 		                      	  </form>
 		                  	  </td>

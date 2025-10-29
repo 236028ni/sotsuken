@@ -1,5 +1,10 @@
+<%@page import="java.util.*,dao.StudentDAO,model.UserBean,model.StudentBean,model.TeacherBean" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var = "student" value = "${sessionScope.student}"/>
+<c:set var = "teacher" value = "${sessionScope.teacher}"/>
+<c:set var = "admin" value = "${sessionScope.admin }"/>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -148,7 +153,7 @@
         <h1>アカウント削除</h1>
 
         <div class="form-group">
-            <label for="selected_id_display">選択した番号・ID</label>
+            <label for="selected_id_display">${not empty student.user_id?student.user_id:teacher.user_id }</label>
             <input type="text" id="selected_id_display" value="自動入力" readonly style="background-color: #f5f5f5;">
         </div>
 
@@ -167,79 +172,100 @@
             <button id="delete_confirm_button">削除</button>
         </div>
     </div>
-
+	
+	<!-- モーダルメニュー -->
     <div class="modal-overlay" id="deleteModal">
         <div class="modal-content">
             <h2>アカウント削除</h2> 
-            <p>本当に削除しますか</p>
+            
+            <%-- ▼ 1. エラーメッセージ表示領域を追加 ▼ --%>
+            <c:if test="${not empty admin_error}">
+                <p style="color: red; font-weight: bold; font-size: 0.9em; margin-bottom: 15px;">
+                    <c:out value="${admin_error}" />
+                </p>
+            </c:if>
+            <%-- ▲ 1. ここまで ▲ --%>
+
+            <p>削除を行うには管理者のIDとパスワードを入力してください</p>
+            <div>
+		        <label for="check_id">ID:</label>
+		        <input type="text" id="check_id">
+		    </div>
+		    <div>
+		        <label for="check_pw">PW:</label>
+		        <input type="password" id="check_pw">
+		    </div>
             <div class="modal-actions">
-                <button id="modal_yes">はい</button>
-                <button id="modal_no">いいえ</button>
+                <%-- ▼ 2. modal_yes の disabled 属性を削除 (もしあれば) ▼ --%>
+                <button id="modal_yes">削除</button>
+                <button id="modal_no">閉じる</button>
             </div>
         </div>
     </div>
-    
-    <form action="delete_process.php" method="POST" id="deleteForm" style="display:none;">
-        <input type="hidden" id="form_id_field" name="id" value="">
-        <input type="hidden" id="form_password_field" name="password" value="">
+    <%-- ▼ 3. フォームの送信先(action)をサーブレットに変更 ▼ --%>
+    <form action="DeleteAccountServlet" method="POST" id="deleteForm" style="display:none;">
+      
+        
+        <%-- (削除対象のID用: この例ではstudent/teacherのID。必要に応じて修正) --%>
+        <input type="hidden" name="target_id" value="<c:out value='${not empty student.user_id ? student.user_id : teacher.user_id}' />">
+        
+        <%-- ▼ 4. 管理者ID/PWを送るための hidden フィールドを追加 ▼ --%>
+        <input type="hidden" id="form_admin_id" name="admin_id" value="${admin.user_id }">
+        <input type="hidden" id="form_admin_pw" name="admin_pw" value="${admin.password }">
     </form>
+    
+    
 
 
     <script>
-        // URLのクエリパラメータ取得関数
-        function getQueryParams() {
-            const params = {};
-            const queryString = window.location.search.substring(1);
-            const regex = /([^&=]+)=([^&]*)/g;
-            let m;
-            while (m = regex.exec(queryString)) {
-                params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-            }
-            return params;
-        }
-
-        const deleteContainer = document.getElementById('deleteContainer');
-        const modal = document.getElementById('deleteModal');
+        // --- 要素の取得 (エラー修正) ---
         const deleteButton = document.getElementById('delete_confirm_button');
+        const passwordInput = document.getElementById('current_password');
+        const modal = document.getElementById('deleteModal');
         const modalYes = document.getElementById('modal_yes');
         const modalNo = document.getElementById('modal_no');
-        const passwordInput = document.getElementById('current_password');
-
-        // ページロード時の処理
-        window.onload = function() {
-            const params = getQueryParams();
-            const id = params['id'] || 'IDがありません';
-            const name = params['name'] || '名前がありません';
-
-            document.getElementById('selected_id_display').value = id;
-            document.getElementById('selected_name_display').value = name;
-            document.getElementById('form_id_field').value = id;
-        };
+        const modalCheckID = document.getElementById('check_id');
+        const modalCheckPW = document.getElementById('check_pw');
+        const deleteForm = document.getElementById('deleteForm');
 
         // 1. 「削除」ボタンでモーダルを表示
         deleteButton.addEventListener('click', function() {
-            if (passwordInput.value.trim() === '') {
-                alert('削除を確定するには現在のパスワードを入力してください。');
-                return;
-            }
-            // モーダルを表示
             modal.style.display = 'flex';
-            // 背後の画面を暗く、操作不可にする
             document.body.classList.add('modal-active');
         });
 
         // 2. モーダルで「はい」を押した場合
         modalYes.addEventListener('click', function() {
+            // ▼ 5. フォームに「現在のPW」と「管理者ID/PW」をセット ▼
             document.getElementById('form_password_field').value = passwordInput.value;
-            // 削除処理の実行
-            document.getElementById('deleteForm').submit();
+            document.getElementById('form_admin_id').value = modalCheckID.value;
+            document.getElementById('form_admin_pw').value = modalCheckPW.value;
+            
+            // 削除処理の実行 (サーブレットへ送信)
+            deleteForm.submit();
         });
 
         // 3. モーダルで「いいえ」を押した場合
         modalNo.addEventListener('click', function() {
-            modal.style.display = 'none'; // モーダルを閉じる
-            document.body.classList.remove('modal-active'); // 背後の画面を元に戻す
+            modal.style.display = 'none';
+            document.body.classList.remove('modal-active');
         });
+     
+        // ▼ 6. JavaScriptの検証ロジック (validateInputs) は全て削除 ▼
+        // ( const inputA = ... , validateInputs() ... などを全て削除 )
+
+
+        // ▼ 7. エラー時にモーダルを自動表示する処理 ▼
+        (function() {
+            // EL式を使って、サーバーから "adminError" が渡されたかチェック
+            <c:if test="${not empty adminError}">
+                // エラーがある場合、このJSコードがHTMLに出力される
+                console.log("管理者エラーによりモーダルを自動表示します。");
+                modal.style.display = 'flex';
+                document.body.classList.add('modal-active');
+            </c:if>
+        })();
+        
     </script>
 </body>
 </html>

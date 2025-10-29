@@ -1,11 +1,19 @@
 package servlet.adminredirect;
 
+import java.io.IOException;
+
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import jakarta.servlet.http.HttpSession;
+
+import dao.StudentDAO;
+import dao.TeacherDAO;
+import dao.UserDAO;
+import model.UserBean;
 
 /**
  * Servlet implementation class Redirect_Account_delete_Servlet
@@ -34,8 +42,26 @@ public class Redirect_Account_delete_Servlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		HttpSession session = request.getSession();
+		
+		UserDAO udao = new UserDAO();
+		//先に学生から取得を試行（デフォルトを学生とする）
+		String del_id = request.getParameter("del_student_id");
+		if(del_id != null) {
+			//学生がnullじゃない（削除したいのが学生）ならそのまま実行
+			StudentDAO sdao = new StudentDAO();
+			UserBean user = udao.findall(del_id);
+			session.setAttribute("student", sdao.search_by_id(user));
+		}else {
+			//学生がnull（削除したいのが講師）なら講師のIDを取得して実行
+			del_id = request.getParameter("del_teacher_id");
+			TeacherDAO tdao = new TeacherDAO();
+			UserBean user = udao.findall(del_id);
+			session.setAttribute("teacher", tdao.search_by_id(user));
+		}
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Account_delete.jsp");
+		dispatcher.forward(request, response);
 	}
 
 }
