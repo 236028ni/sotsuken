@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import dao.StudentDAO;
 import dao.TeacherDAO;
 import model.AdminBean;
+import model.UserBean;
 
 /**
  * Servlet implementation class Account_delete_Servlet
@@ -32,8 +33,18 @@ public class Account_delete_Servlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		// フィルターを通過したので、ログイン済みであることを前提に処理を開始する
+	    HttpSession session = request.getSession(false);
+	    
+	    // 1. セッションからログイン時に保存したBeanを取得する
+	    //    (DBへの問い合わせは行わない)
+	    UserBean user = (UserBean) session.getAttribute("user");
+	    
+	    // 2. 取得したBeanをJSPへ渡す
+	    //    (JSPが ${student.name} のように参照できるようにする)
+	    request.setAttribute("user", user); 
+	    
+	    // 3. JSPへフォワード
 	}
 
 	/**

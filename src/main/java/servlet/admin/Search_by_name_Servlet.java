@@ -15,19 +15,18 @@ import dao.StudentDAO;
 import dao.TeacherDAO;
 import model.StudentBean;
 import model.TeacherBean;
-import model.UserBean;
 
 /**
  * Servlet implementation class Search_by_id_Servlet
  */
-@WebServlet("/Search_by_id_Servlet")
-public class Search_by_id_Servlet extends HttpServlet {
+@WebServlet("/Search_by_name_Servlet")
+public class Search_by_name_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Search_by_id_Servlet() {
+    public Search_by_name_Servlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,18 +35,8 @@ public class Search_by_id_Servlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// フィルターを通過したので、ログイン済みであることを前提に処理を開始する
-	    HttpSession session = request.getSession(false);
-	    
-	    // 1. セッションからログイン時に保存したBeanを取得する
-	    //    (DBへの問い合わせは行わない)
-	    UserBean user = (UserBean) session.getAttribute("user");
-	    
-	    // 2. 取得したBeanをJSPへ渡す
-	    //    (JSPが ${student.name} のように参照できるようにする)
-	    request.setAttribute("user", user); 
-	    
-	    // 3. JSPへフォワード
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -55,11 +44,11 @@ public class Search_by_id_Servlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		String in_student_id = request.getParameter("in_student_id");
-		String in_teacher_id = request.getParameter("in_teacher_id");
-		if(in_student_id != null) {
+		String in_student_name = request.getParameter("in_student_name");
+		String in_teacher_name = request.getParameter("in_teacher_name");
+		if(in_student_name != null) {
 			StudentDAO sdao = new StudentDAO();
-			List<StudentBean> result_list = sdao.search_by_id_like(in_student_id);
+			List<StudentBean> result_list = sdao.search_by_name_like(in_student_name);
 			System.out.println(result_list.size());
 			if(result_list.size() == 0) {
 				session.setAttribute("error_msg", "該当するデータがありません");
@@ -67,13 +56,13 @@ public class Search_by_id_Servlet extends HttpServlet {
 				session.removeAttribute("error_msg");
 			}
 			session.setAttribute("result_list", result_list);
-			session.setAttribute("in_student_id", in_student_id);
+			session.setAttribute("in_student_name", in_student_name);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Student_list2.jsp");
 			dispatcher.forward(request, response);
 			
-		}else if(in_teacher_id != null) {
+		}else if(in_teacher_name != null) {
 			TeacherDAO tdao = new TeacherDAO();
-			List<TeacherBean> result_list = tdao.search_by_id_like(in_teacher_id);
+			List<TeacherBean> result_list = tdao.search_by_name_like(in_teacher_name);
 			System.out.println(result_list.size());
 			if(result_list.size() == 0) {
 				session.setAttribute("error_msg", "該当するデータがありません");
@@ -81,7 +70,7 @@ public class Search_by_id_Servlet extends HttpServlet {
 				session.removeAttribute("error_msg");
 			}
 			session.setAttribute("result_list", result_list);
-			session.setAttribute("in_teacher_id", in_teacher_id);
+			session.setAttribute("in_teacher_name", in_teacher_name);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Teacher_list.jsp");
 			dispatcher.forward(request, response);
 		}else {

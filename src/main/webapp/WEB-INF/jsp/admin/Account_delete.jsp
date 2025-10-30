@@ -152,23 +152,22 @@
     <div class="delete-container" id="deleteContainer">
         <h1>アカウント削除</h1>
 
-        <div class="form-group">
-            <label for="selected_id_display">${not empty student.user_id?student.user_id:teacher.user_id }</label>
-            <input type="text" id="selected_id_display" value="自動入力" readonly style="background-color: #f5f5f5;">
-        </div>
 
         <div class="form-group">
-            <label for="selected_name_display">選択した名前</label>
-            <input type="text" id="selected_name_display" value="自動入力" readonly style="background-color: #f5f5f5;">
+            <label for="selected_id_display">選択したID・番号</label>
+            <input type="text" id="selected_id_display" value="${not empty student.user_id?student.user_id:teacher.user_id }" readonly style="background-color: #f5f5f5;">
         </div>
         
         <div class="form-group">
-            <label for="current_password">現在のパスワード</label>
-            <input type="password" id="current_password" placeholder="パスワードを入力">
+            <label for="selected_name_display">選択した名前</label>
+            <input type="text" id="selected_name_display" value="${not empty student.user_id?student.student_name:teacher.teacher_name }" readonly style="background-color: #f5f5f5;">
         </div>
+        
 
         <div class="action-buttons">
-            <a href="account_list.html" id="back_button">戻る</a>
+            <form action = "Redirect_Account_delete_Servlet" method = "post">
+            	<button id = "buck_button">戻る</button>
+            </form>
             <button id="delete_confirm_button">削除</button>
         </div>
     </div>

@@ -9,7 +9,7 @@
 %>
 <c:set var = "teacher_list" value = "${sessionScope.teacher_list }"/>
 <c:set var = "result_list" value = "${sessionScope.result_list }"/>
-<c:set var = "in_teacher_id" value = "${sessionScope.in_teacher_id }"/>
+<c:set var = "in_teacher_name" value = "${sessionScope.in_teacher_name }"/>
 <c:set var = "error_msg" value = "${sessionScope.error_msg }"/>
 
 <!DOCTYPE html>
@@ -140,17 +140,17 @@
     <div class="list-container">
         <h1>学生一覧</h1>
 		<div class="table-wrapper">
-			<c:if test = "${in_teacher_id != null }">
-				<p>講師IDに「"${in_teacher_id }"」を含む講師：${result_list.size() }件</p>
+			<c:if test = "${in_teacher_name != null }">
+				<p>氏名に「"${in_teacher_name }"」を含む講師：${result_list.size() }件</p>
 			</c:if>
-			<c:if test = "${in_teacher_id!=null}">
+			<c:if test = "${in_teacher_name!=null}">
                 <form action = "Redirect_Teacher_list_Servlet" method = "post" class="reset-form">
                     <button type = "submit" class="reset-button">リセット</button> <%-- ★変更: ボタンのクラス変更 --%>
                 </form>
             </c:if>
         	<div class="search-area">
-        		<form action = "Search_by_id_Servlet" method = "post" >
-	       	    	<input type="text" placeholder="講師" id="search_input" name = "in_teacher_id">
+        		<form action = "Search_by_name_Servlet" method = "post" >
+	       	    	<input type="text" placeholder="講師" id="search_input" name = "in_teacher_name">
 	        	    <button type = "submit" id="search_button">検索</button>
             	</form>
          	</div>

@@ -34,8 +34,18 @@ public class Redirect_Account_delete_Servlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		// フィルターを通過したので、ログイン済みであることを前提に処理を開始する
+	    HttpSession session = request.getSession(false);
+	    
+	    // 1. セッションからログイン時に保存したBeanを取得する
+	    //    (DBへの問い合わせは行わない)
+	    UserBean user = (UserBean) session.getAttribute("user");
+	    
+	    // 2. 取得したBeanをJSPへ渡す
+	    //    (JSPが ${student.name} のように参照できるようにする)
+	    request.setAttribute("user", user); 
+	    
+	    // 3. JSPへフォワード
 	}
 
 	/**
@@ -44,6 +54,8 @@ public class Redirect_Account_delete_Servlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		
+		session.removeAttribute("student");
+		session.removeAttribute("teacher");
 		UserDAO udao = new UserDAO();
 		//先に学生から取得を試行（デフォルトを学生とする）
 		String del_id = request.getParameter("del_student_id");

@@ -51,7 +51,7 @@ public class Redirect_Student_list_Servlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getSession().removeAttribute("result_list");
-		request.getSession().removeAttribute("in_student_id");
+		request.getSession().removeAttribute("in_student_name");
 		request.getSession().removeAttribute("error_msg");
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/admin/Student_list2.jsp");
 		dispatcher.forward(request, response);
