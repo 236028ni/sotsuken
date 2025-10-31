@@ -45,6 +45,7 @@ public class Account_delete_Servlet extends HttpServlet {
 	    request.setAttribute("user", user); 
 	    
 	    // 3. JSPへフォワード
+	    request.getRequestDispatcher("/WEB-INF/jsp/admin/Account_delete.jsp").forward(request, response);
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class Account_delete_Servlet extends HttpServlet {
 		if(is_admin) {
 			//削除対象によって処理を分岐
 			if(del_student_id != null) {
-				//子クラスから先に追加する
+				//子クラスから先に削除する
 				StudentDAO sdao = new StudentDAO();
 			}else if(del_teacher_id != null) {
 				//同様に子クラスから先に追加する

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+    <Resource 
+        name="jdbc/YourDB"  
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="com.mysql.cj.jdbc.Driver"
+        
+        url="jdbc:mysql://localhost/sotsuken2025_nii"
+        
+        username="root"
+        
+        password="password"
+        
+        maxTotal="20"
+        maxIdle="10"
+        maxWaitMillis="5000"
+    />
+
+</Context>
