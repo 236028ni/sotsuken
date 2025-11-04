@@ -4,10 +4,9 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <%
     	StudentBean student = (StudentBean)session.getAttribute("student");
-    	String user_id = student.getUser_id();
-    	session.setAttribute("user_id", user_id);
+    	session.setAttribute("student", student);
     %>
-    <c:set var = "user_id" value = "${sessionScope.user_id }"/>
+    <c:set var = "student" value = "${sessionScope.student }"/>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -148,6 +147,24 @@
             margin-bottom: 15px;
         }
 
+		.menu-nav li button {
+			  /* (A) 見た目を揃えるための共通スタイル */
+			  text-decoration: none;
+            color: #007bff;
+            font-size: 18px;
+            padding: 8px 0;
+            display: block;
+            transition: color 0.2s ease;
+			
+			  /* (B) ボタンのデフォルトスタイルをリセット（重要） */
+			  background: none; /* ボタンの背景色を消す */
+			  border: none;     /* ボタンの枠線を消す */
+			  cursor: pointer;  /* マウスカーソルを指マークに */
+			  
+			  /* フォントが継承されない場合があるので明示的に指定 */
+			  font: inherit; 
+		}
+		
         .menu-nav a {
             text-decoration: none;
             color: #007bff;
@@ -175,8 +192,8 @@
     <div class="shome-container">
         <header class="shome-header">
             <div class="user-info">
-                <span class="student-id">学籍番号：</span>
-                <span class="student-name">名前：</span>
+                <span class="student-id">学籍番号：${student.getUser_id() }</span>
+                <span class="student-name">名前：${student.getStudent_name() }</span>
             </div>
             <button class="hamburger-button" id="hamburgerButton">
                 &#9776;
@@ -184,8 +201,9 @@
         </header>
 
         <p>以下のQRコードをリーダーにかざしてください</p>
-        <img src="Qr_code_Servlet?text=${sessionScope.user_id }" alt="出席登録用QRコード">
-        ※QRコードは（株）デンソーウェーブの登録商標です
+        <img src="Qr_code_Servlet?text=${student.getUser_id() }" alt="出席登録用QRコード">
+        <!--  （おまけ）　※QRコードは（株）デンソーウェーブの登録商標です  -->
+        
         
     </div>
 
@@ -195,7 +213,11 @@
             <nav class="menu-nav">
                 <ul>
                     <li><a href="#">メール</a></li>
-                    <li><a href="#">マイページ</a></li>
+                    <li>
+                    	<form action = "Redirect_Student_mypage_Servlet" method = "post">
+                    		<button type = "submit">マイページ</button>
+                    	</form>
+                   	</li>
                     <li><a href="#">事前連絡</a></li>
                     <li><a href="#">出欠記録</a></li>
                 </ul>
@@ -205,6 +227,7 @@
     </div>
 
     <script>
+    	//ハンバーガーメニューの動作
         const hamburgerButton = document.getElementById('hamburgerButton');
         const menuOverlay = document.getElementById('menuOverlay');
         const closeMenuButton = document.getElementById('closeMenuButton');

@@ -91,4 +91,21 @@ public class UserDAO extends DAOparam{
 			return null;
 		}
 	}
+	public boolean change_password(String new_password,String id) {
+		try(Connection conn = DriverManager.getConnection(JDBC_URL,DB_USER,DB_PASS)){
+			String sql = "update users set password = ? where user_id = ?";
+			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt.setString(1, new_password);
+			pStmt.setString(2, id);
+			
+			int result  = pStmt.executeUpdate();
+			if(result!=1) {
+				return false;
+			}
+			return true;
+		}catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
