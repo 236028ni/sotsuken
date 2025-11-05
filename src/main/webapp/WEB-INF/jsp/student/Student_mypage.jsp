@@ -20,7 +20,7 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #f8f8f8; 
             margin: 0;
             padding-top: 20px;
         }
@@ -38,7 +38,7 @@
         h1 {
             font-size: 22px;
             margin-bottom: 25px;
-            color: #333;
+            color: #333; 
             text-align: left;
         }
 
@@ -51,7 +51,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
-            color: #555;
+            color: #555; 
         }
 
         .input-group input[type="text"] {
@@ -60,31 +60,40 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
-            background-color: #f9f9f9; /* Read-only appearance */
+            background-color: #f9f9f9; 
             color: #666;
         }
 
-        .password-change-link {
-            display: block;
-            margin-top: 15px;
-            font-size: 15px;
-            color: #007bff;
-            text-decoration: none;
+        .password-change-button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
             cursor: pointer;
-            transition: color 0.2s ease;
+            transition: background-color 0.2s ease;
+            font-size: 16px;
+            width: 100%;
+            max-width: 150px;
+            margin-top: 15px;
+            box-sizing: border-box;
         }
 
-        .password-change-link:hover {
-            color: #0056b3;
+        .password-change-button:hover {
+            background-color: #0056b3;
         }
-
+        
         .back-button {
+            /* 参照元 (.action-button) のスタイルを適用 */
             background-color: #6c757d;
             color: white;
             padding: 10px 20px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px; /* 5px から 4px に変更 */
             cursor: pointer;
+            
+            /* この画面のレイアウト維持に必要なスタイル */
             font-size: 16px;
             width: 100%;
             max-width: 150px;
@@ -109,7 +118,7 @@
             <input type="text" id="student_name" name="student_name" value="${student.getStudent_name() }" readonly>
         </div>
         <form action = "Redirect_Password_change_Servlet" method = "post">
-        	<button type = "submit" class = "password-change-link">パスワード変更</button>
+        	<button type = "submit" class = "password-change-button">パスワード変更</button>
         </form>
         <form action = "Redirect_Student_menu_Servlet" method = "post">
         	<button type = "submit" class="back-button">戻る</button>

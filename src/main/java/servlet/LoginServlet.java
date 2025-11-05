@@ -88,7 +88,8 @@ public class LoginServlet extends HttpServlet {
         }else {
         	// ★★★ 修正点1: フィルター用のセッション情報を格納 ★★★
             // AuthFilterが "loginUser" と "user_role" を見ているため
-            session.setAttribute("loginUser", user); // または user.getUser_id() など
+            session.setAttribute("user", user);
+            session.setAttribute("loginUser", user);// または user.getUser_id() など
             session.setAttribute("user_role", user.getRole());
         	
         	

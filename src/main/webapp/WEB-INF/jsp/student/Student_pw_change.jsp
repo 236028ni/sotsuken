@@ -2,10 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%
-	StudentBean student = (StudentBean)session.getAttribute("student");
-	session.setAttribute("student", student);
-%>
+<c:set var = "student" value = "${sessionScope.student }"/>
+<c:set var = "error_msg" value = "${sessionScope.error_msg }"/>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -172,8 +170,11 @@
 
 <div class="container" id="formScreen">
   <h2>S.パスワード変更</h2>
-
-  <form acation = "Student_pw_change_Servlet" method = "post" id="password_form" novalidate>
+  <c:if test = "${not empty error_msg }">
+  <span id="password_error" class="error-message" style="display: block;">${error_msg }</span>
+</c:if>
+	
+  <form action = "Student_pw_change_Servlet" method = "post" id="password_form" novalidate>
     <label for="current_password">現在のパスワード</label>
     <div class="input-wrapper">
       <input type="password" id="current_password" name = "current_password" required autocomplete="current_password" />
@@ -191,7 +192,7 @@
       <input type="password" id="confirm_password" name  = "confirm_password"  required autocomplete="new_password" />
       <i class="fa-solid fa-eye toggle-pw" data-target="confirm_password"></i>
     </div>
-    <span id="password_error" class="error-message"></span>
+    <span id="password_match_error" class="error-message"></span>
 	
 	<input type = "hidden" id = "user_id" name = "user_id" value = "${student.getUser_id() }">
 	
@@ -212,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("password_form");
   const newPasswordInput = document.getElementById("new_password");
   const confirmPasswordInput = document.getElementById("confirm_password");
-  const passwordErrorSpan = document.getElementById("password_error");
+  const passwordErrorSpan = document.getElementById("password_match_error");
   const submitButton = form.querySelector("button[type='submit']");
   const toggleIcons = document.querySelectorAll(".toggle-pw");
   
@@ -221,18 +222,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // 「新しいパスワード」と「確認用パスワード」の両方に入力があるたびにチェックする
   
   function validatePasswords() {
-    const newPW = newPasswordInput.value;
-    const confirmPW = confirmPasswordInput.value;
+  const newPW = newPasswordInput.value;
+  const confirmPW = confirmPasswordInput.value;
 
-    // 確認用が入力されていて、かつ新しいパスワードと一致しない場合
-    if (confirmPW && newPW !== confirmPW) {
-      passwordErrorSpan.textContent = "新しいパスワードが一致しません。";
-      submitButton.disabled = true; // 送信ボタンを無効化
-    } else {
-      passwordErrorSpan.textContent = ""; // エラーをクリア
-      submitButton.disabled = false; // 送信ボタンを有効化
-    }
+  // 確認用が入力されていて、かつ新しいパスワードと一致しない場合
+  if (confirmPW && newPW !== confirmPW) {
+    passwordErrorSpan.textContent = "新しいパスワードが一致しません。";
+    passwordErrorSpan.style.display = "block"; // ★ 追加：エラーを表示
+    submitButton.disabled = true; // 送信ボタンを無効化
+  } else {
+    passwordErrorSpan.textContent = ""; // エラーをクリア
+    passwordErrorSpan.style.display = "none"; // ★ 追加：エラーを非表示
+    submitButton.disabled = false; // 送信ボタンを有効化
   }
+}
 
   // 両方の入力欄に 'input' (入力) イベントリスナーを追加
   newPasswordInput.addEventListener("input", validatePasswords);

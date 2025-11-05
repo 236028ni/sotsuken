@@ -73,12 +73,17 @@ public class Student_pw_change_Servlet extends HttpServlet {
 		if(!current_password.equals(user_password)) {
 			//現在のPW違うときの処理
 			session.setAttribute("error_msg","PW間違えてるようじゃだめかー");
+			request.getRequestDispatcher("/WEB-INF/jsp/student/Student_pw_change.jsp").forward(request, response);
 		}else {
 			//現在のPWあってるとき
 			if(is_change) {
-				//正常に変更が完了したとき
+				//正常に変更が完了したときは完了画面に遷移する
+				//ここだけうまくいってない
+				request.getRequestDispatcher("/WEB-INF/jsp/student/Student_pw_change_complete.jsp").forward(request, response);
 			}else {
-				//変更が異常終了したトキ
+				//変更が異常終了した時は専用のエラーページ画面に遷移する
+				session.setAttribute("error_msg", "予期せぬエラーが発生しました");
+				request.getRequestDispatcher("/WEB-INF/jsp/Error.jsp").forward(request, response);
 			}
 		}
 	}

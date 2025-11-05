@@ -64,10 +64,10 @@
 <body>
     <div class="complete-container">
         <div class="message-box">
-            送信完了
+            パスワード変更完了
         </div>
         <form action = "Redirect_Student_menu_Servlet">
-        	<button type = "submit" class = "home-button">HOME</button>
+        	<button type = "submit" class = "home-button">HOMEへ戻る</button>
         </form>
     </div>
 </body>
