@@ -110,8 +110,8 @@
             padding: 10px;
             box-sizing: border-box;
             border: 1px solid #ccc;
+            resize: none;
             border-radius: 4px;
-            resize: vertical;
             font-size: 16px;
         }
 
@@ -191,7 +191,7 @@
                     </div>
                     <div>
                         <input type="checkbox" id="period4" name="periods" value="4">
-                        <label for="period4">4限目 <span style="font-size: 0.8em; color: #007bff;">(由貴)</span></label>
+                        <label for="period4">4限目 </label>
                     </div>
                     </div>
             </div>
@@ -240,18 +240,14 @@
                 </div>
 
             <div class="footer-buttons">
-                <button type="button" class="back-button" onclick="history.back()">戻る</button>
+                
                 <button type="submit" class="send-button">送信</button>
             </div>
         </form>
+        <form action = "Redirect_Student_menu_Servlet" metod = "post">
+        	<button type="submit" class="back-button" >戻る</button>
+        </form>
     </div>
 
-    <script>
-
-        // 画像添付ボタンとファイル選択の連動
-        document.querySelector('.file-upload-button').addEventListener('click', function(e) {
-            document.getElementById('evidence-image').click();
-        });
-    </script>
 </body>
 </html>

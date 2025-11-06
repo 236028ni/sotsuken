@@ -35,7 +35,7 @@ public class Redirect_Student_contact_Servlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("WEB-INF/jsp/student/Student_");
+		request.getRequestDispatcher("WEB-INF/jsp/student/Student_contact.jsp").forward(request, response);
 	}
 
 }

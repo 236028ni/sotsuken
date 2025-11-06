@@ -218,7 +218,11 @@
                     		<button type = "submit">マイページ</button>
                     	</form>
                    	</li>
-                    <li><a href="#">事前連絡</a></li>
+                    <li>
+                    	<form action = "Redirect_Student_contact_Servlet" method = "post">
+                    		<button type = "submit">事前連絡</button>
+                   		</form>
+                    </li>
                     <li><a href="#">出欠記録</a></li>
                 </ul>
             </nav>
