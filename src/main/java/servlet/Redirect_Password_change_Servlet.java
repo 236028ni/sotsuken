@@ -1,4 +1,4 @@
-package servlet.studentredirect;
+package servlet;
 
 import java.io.IOException;
 
