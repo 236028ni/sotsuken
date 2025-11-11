@@ -1,4 +1,4 @@
-package servlet.studentredirect;
+package servlet.teacherredirect;
 
 import java.io.IOException;
 
@@ -12,16 +12,16 @@ import jakarta.servlet.http.HttpSession;
 import model.UserBean;
 
 /**
- * Servlet implementation class Redirect_Student_mypage_Servlet
+ * Servlet implementation class Redirect_Teacher_mypage_Servlet
  */
-@WebServlet("/Redirect_Student_mypage_Servlet")
-public class Redirect_Student_mypage_Servlet extends HttpServlet {
+@WebServlet("/Redirect_Teacher_mypage_Servlet")
+public class Redirect_Teacher_mypage_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Redirect_Student_mypage_Servlet() {
+    public Redirect_Teacher_mypage_Servlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -41,14 +41,14 @@ public class Redirect_Student_mypage_Servlet extends HttpServlet {
 	    //    (JSPが ${student.name} のように参照できるようにする)
 	    request.setAttribute("user", user); 
 	    
-	    request.getRequestDispatcher("WEB-INF/jsp/student/Student_mypage.jsp").forward(request, response);
+	    request.getRequestDispatcher("WEB-INF/jsp/teacher/Teacher_mypage.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("WEB-INF/jsp/student/Student_mypage.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/jsp/teacher/Teacher_mypage.jsp").forward(request, response);
 	}
 
 }

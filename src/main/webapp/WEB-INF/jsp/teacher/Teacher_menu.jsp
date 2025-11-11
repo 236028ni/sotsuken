@@ -1,8 +1,12 @@
+<%@ page import = "java.util.*,model.UserBean,model.TeacherBean" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-	
+	TeacherBean teacher = (TeacherBean)session.getAttribute("teacher");
+	session.setAttribute("teacher", teacher);
 %>
+<c:set var = "teacher" value = "${sessionScope.teacher }"/>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -87,19 +91,42 @@
             background-color: #e0e0e0; /* Slightly darker gray on hover */
             border-color: #ccc;
         }
+        
+        .logout-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 30px;
+            transition: background-color 0.3s ease;
+        }
     </style>
 </head>
 <body>
     <div class="thome-container">
         <header class="user-info-header">
-            <span>ID</span>
-            <span>名前</span>
+            <span>講師ID：${teacher.getUser_id() }</span>
+            <span>名前：${teacher.getTeacher_name() }</span>
         </header>
 
         <main class="main-buttons">
-            <button>マイページ</button>
-            <button>出欠記録確認</button>
-            <button>事前連絡</button>
+            <form action = "Redirect_Teacher_mypage_Servlet" method = "post">
+            	<button type = "submit">マイページ</button>
+            </form>
+            <form action = "#" method = "post">
+            	<button type = "submit">出欠記録確認</button>
+            </form>
+            <form action = "#" method = "post">
+            	<button type = "submit">事前連絡</button>
+            </form>
+            <form action = "LogoutServlet" method = "post">
+            	<button class="logout-button" type = "submit">ログアウト</button>
+            </form>
+            
         </main>
     </div>
 </body>

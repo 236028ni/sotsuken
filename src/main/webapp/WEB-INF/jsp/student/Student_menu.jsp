@@ -223,10 +223,16 @@
                     		<button type = "submit">事前連絡</button>
                    		</form>
                     </li>
-                    <li><a href="#">出欠記録</a></li>
+                    <li>
+                    	<form>
+                    		<a href="#">出欠記録</a>
+                    	</form>
+                   	</li>
                 </ul>
             </nav>
-            <button class="logout-button">ログアウト</button>
+            <form action = "LogoutServlet" method = "post">
+            	<button class="logout-button" type = "submit">ログアウト</button>
+            </form>
         </div>
     </div>
 
