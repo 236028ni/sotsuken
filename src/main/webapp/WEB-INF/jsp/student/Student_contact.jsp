@@ -167,11 +167,10 @@
     <div class="container">
         <h1>S.連絡</h1>
         
-        <form action = "Student_contact_Servlet" method = "POST"  id="contactForm">
+        <form action = "Student_contact_Servlet" method = "POST"  id="contactForm"enctype="multipart/form-data">
             <div class="form-group">
                 <label for="contact-date">日付</label>
-                <input type="date" id="contact-date" name="contact-date" value="2025-10-21">
-                <button type="button" class="calendar-button">カレンダー表示</button>
+                <input type="date" id="contact-date" name="contact-date">
             </div>
 
             <div class="form-group">
@@ -250,4 +249,33 @@
     </div>
 
 </body>
+<script>
+	//ページの読み込みが完了したら実行
+	document.addEventListener('DOMContentLoaded', function() {
+	    
+	    // 1. 今日の日付データを取得
+	    const today = new Date();
+	
+	    // 2. 'YYYY-MM-DD' 形式にフォーマット
+	    const year = today.getFullYear();
+	    
+	    // getMonth() は 0 (1月) から 11 (12月) で返ってくるため、+1 する
+	    // padStart(2, '0') は、数字が1桁の場合に先頭を0で埋める (例: 5 -> 05)
+	    const month = String(today.getMonth() + 1).padStart(2, '0');
+	    
+	    const day = String(today.getDate()).padStart(2, '0');
+	
+	    // 3. 結合して 'YYYY-MM-DD' 形式の文字列を作成
+	    const formattedDate = `${year}-${month}-${day}`;
+	
+	    // 4. input要素を取得し、valueに設定
+	    // HTMLで指定した id="dateInput" を使って要素を特定
+	    const dateInput = document.getElementById('contact-date');
+	    
+	    if (dateInput) {
+	        dateInput.value = formattedDate;
+	    }
+	
+	});
+</script>
 </html>
