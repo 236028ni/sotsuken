@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+	StudentBean student = (StudentBean)session.getAttribute("student");
+	session.setAttribute("student",student);
+%>
+<c:set var = "student" value = "${sessionScope.student }"/>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -237,9 +243,10 @@
                 <label for="evidence-image" class="file-upload-button">画像を添付</label>
                 <input type="file" id="evidence-image" name="evidence-image" accept="image/*">
                 </div>
-
+			
+			<input type = "hidden" name = "student_id"  value = "${student.getUser_id() }"/>
+			
             <div class="footer-buttons">
-                
                 <button type="submit" class="send-button">送信</button>
             </div>
         </form>

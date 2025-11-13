@@ -1,9 +1,11 @@
-package servlet.student;
+ package servlet.student; // パッケージ宣言 (環境に合わせてください)
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
+// import java.io.PrintWriter; // ← 不要になります
 import java.util.UUID;
 
+import jakarta.servlet.RequestDispatcher; // ★ JSP遷移のために追加
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,27 +14,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
-// --- ↓↓↓↓ エラーが出ているのは、これらのライブラリが見つからないためです ↓↓↓↓ ---
+import model.RequestBean;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client; // S3Client の定義元
+// import javax.swing.plaf.synth.Region; // ← 修正済みと仮定
+import software.amazon.awssdk.regions.Region; // ← 正しい Region をインポート
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
-// --- ↑↑↑↑ Mavenプロジェクトの更新で解決するはずです ↑↑↑↑ ---
 
-// 1. JSPの <form action="Student_contact_Servlet"> に合わせる
+
 @WebServlet("/Student_contact_Servlet")
-// ファイルアップロードを受け付けるために必須
 @MultipartConfig
 public class Student_contact_Servlet extends HttpServlet {
 
-    // S3バケットの情報
     private static final String BUCKET_NAME = "1sotuken1";
-    // Region.AP_NORTHEAST_1 は、 'import software.amazon.awssdk.regions.Region;' によって解決されます
     private static final Region S3_REGION = Region.AP_NORTHEAST_1;
-
-    // S3Client は、 'import software.amazon.awssdk.services.s3.S3Client;' によって解決されます
     private S3Client s3Client;
+
+    // ▼▼▼ 遷移先のJSPパスを定義 ▼▼▼
+    private static final String JSP_PATH_COMPLETE = "/WEB-INF/jsp/studentStudent_contact_complete.jsp";
 
     @Override
     public void init() throws ServletException {
@@ -47,21 +47,27 @@ public class Student_contact_Servlet extends HttpServlet {
             throws ServletException, IOException {
         
         request.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8"); 
+        // response.setContentType("text/html; charset=UTF-8"); // ← JSP側で設定するため不要
+        // PrintWriter out = response.getWriter(); // ← JSPにフォワードするため不要
 
-        PrintWriter out = response.getWriter();
-        
         String s3ImageUrl = null; 
         String uniqueFileName = null; 
 
+        // ▼▼▼ JSPに渡すための変数を準備 ▼▼▼
+        String contactDate = "";
+        String student_id = "";
+        String periodsStr = "";
+        String errorMessage = null; // エラーメッセージ格納用
+
         try {
             // --- 1. JSPからテキストデータを取得 ---
-            String contactDate = request.getParameter("contact-date");
-            String[] periods = request.getParameterValues("periods");
-            String periodsStr = (periods != null) ? String.join(", ", periods) : "なし";
-            String timeType = request.getParameter("time-type");
-            String reasonType = request.getParameter("reason-type");
-            String reasonDescription = request.getParameter("reason-description");
+            contactDate = request.getParameter("contact-date");//「該当日付」
+            student_id = request.getParameter("student_id");//「学籍番号」
+            String[] periods = request.getParameterValues("periods");//「〇限目」（配列データ）
+            periodsStr = (periods != null) ? String.join(", ", periods) : "なし";
+            String timeType = request.getParameter("time-type");//「事前・事後」区分
+            String reasonType = request.getParameter("reason-type");//「結果・欠席・早退」
+            String reasonDescription = request.getParameter("reason-description");//「理由記述」
 
             // --- 2. JSPからファイルデータを取得 ---
             Part filePart = request.getPart("evidence-image");
@@ -92,26 +98,34 @@ public class Student_contact_Servlet extends HttpServlet {
 
             // --- 3. データベースへの保存処理 ---
             // ここにDB保存ロジックを実装
+            //（１）Beanに登録
+            RequestBean req = new RequestBean();
+            req.setStudent_id(student_id);
+            req.setRequest_date(contactDate);
             
-            // --- 4. ユーザーへの完了通知 (例) ---
-            out.println("<html><head><title>送信完了</title></head><body>");
-            out.println("<h1>連絡が送信されました</h1>");
-            out.println("<p>日付: " + escapeHtml(contactDate) + "</p>");
-            out.println("<p>時限: " + escapeHtml(periodsStr) + "</p>");
-            out.println("<p>画像URL: " + (s3ImageUrl.startsWith("http") ? 
-                "<a href='" + escapeHtml(s3ImageUrl) + "' target='_blank'>画像を表示</a>" : escapeHtml(s3ImageUrl)) + "</p>");
-            out.println("<br><p><a href='" + request.getContextPath() + "/Redirect_Student_menu_Servlet'>メニューに戻る</a></p>");
-            out.println("</body></html>");
+            // --- 4. ユーザーへの完了通知 (HTML出力をすべて削除) ---
+            // out.println(...) 関連はすべて不要
 
         } catch (S3Exception e) {
-            out.println("<html><body><h2>S3へのアップロードに失敗しました</h2>");
-            out.println("<p>エラー: " + e.awsErrorDetails().errorMessage() + "</p></body></html>");
-            e.printStackTrace();
+            // ▼▼▼ S3エラーをJSPに渡すため、変数に格納 ▼▼▼
+            errorMessage = "S3へのアップロードに失敗しました: " + e.awsErrorDetails().errorMessage();
+            e.printStackTrace(); // サーバーログにはスタックトレースを残す
+        
         } catch (Exception e) {
-            out.println("<html><body><h2>処理中にエラーが発生しました</h2>");
-            out.println("<p>エラー: " + e.getMessage() + "</p></body></html>");
-            e.printStackTrace();
+            // ▼▼▼ 一般エラーをJSPに渡すため、変数に格納 ▼▼▼
+            errorMessage = "処理中にエラーが発生しました: " + e.getMessage();
+            e.printStackTrace(); // サーバーログにはスタックトレースを残す
         }
+
+        // --- 5. 処理結果をJSPに渡すために requestスコープ に属性を設定 ---
+        request.setAttribute("contactDate", contactDate);
+        request.setAttribute("periodsStr", periodsStr);
+        request.setAttribute("s3ImageUrl", s3ImageUrl);
+        request.setAttribute("errorMessage", errorMessage); // 成功時は null, エラー時はメッセージが入る
+
+        // --- 6. JSPにフォワード(遷移) ---
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSP_PATH_COMPLETE);
+        dispatcher.forward(request, response);
     }
 
     @Override
@@ -121,7 +135,7 @@ public class Student_contact_Servlet extends HttpServlet {
         }
     }
 
-    // ファイル名から拡張子を取得
+    // ファイル名から拡張子を取得 (変更なし)
     private String getFileExtension(String fileName) {
         if (fileName != null && fileName.lastIndexOf(".") != -1) {
             return fileName.substring(fileName.lastIndexOf("."));
@@ -129,9 +143,11 @@ public class Student_contact_Servlet extends HttpServlet {
         return "";
     }
 
-    // HTMLエスケープ（簡易版）
+    // HTMLエスケープ (JSP側でJSTL <c:out> を使うことを前提とし、サーブレットからは削除)
+    /*
     private String escapeHtml(String text) {
         if (text == null) return "";
         return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
     }
+    */
 }
