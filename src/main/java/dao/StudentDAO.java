@@ -188,5 +188,23 @@ public class StudentDAO extends DAOparam{
 			return null;
 		}
 	}
-	
+	public String search_name_by_id(String student_id) {
+		try(Connection conn = DriverManager.getConnection(JDBC_URL,DB_USER,DB_PASS)) {
+			String sql = "select student_name from students where student_id = ?";
+			String student_name = null;
+			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt.setString(1, student_id);
+			
+			ResultSet rs = pStmt.executeQuery();
+			if(rs.next()) {
+				student_name = rs.getString("student_name");
+			}
+			return student_name;
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
 }
